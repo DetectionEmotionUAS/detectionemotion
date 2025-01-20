@@ -1,13 +1,14 @@
 from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
-from flask_cors import CORS
+from flask_cors import CORS  # Import flask-cors untuk menangani CORS
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 
 app = Flask(__name__)
 
-CORS(app)
+# Mengaktifkan CORS untuk semua asal (bisa dibatasi jika perlu)
+CORS(app, resources={r"/*": {"origins": "*"}})  
 
 MODEL_PATH = "lstm_image_classifier.h5"
 model = load_model(MODEL_PATH)
@@ -21,7 +22,7 @@ def preprocess_image(image, target_size=(48, 48)):
 
 @app.route("/upload", methods=["POST"])
 def predict():
-    label = ["marah","jijik","takut","senang","datar","sedih","terkejut"]
+    label = ["marah", "jijik", "takut", "senang", "datar", "sedih", "terkejut"]
     if "file" not in request.files:
         return jsonify({"error": "No file provided"}), 400
 
